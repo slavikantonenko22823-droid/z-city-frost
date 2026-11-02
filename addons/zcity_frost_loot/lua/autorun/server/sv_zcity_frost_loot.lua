@@ -228,8 +228,25 @@ local function spawnPoint(point)
     ent:SetAngles(point.ang or angle_zero)
     ent.Loot = makeLoot(point)
 
+    -- Keep loot containers as real movable physics props.
+    ent:SetMoveType(MOVETYPE_VPHYSICS)
+    ent:SetSolid(SOLID_VPHYSICS)
+    ent:SetCollisionGroup(COLLISION_GROUP_NONE)
+
     local phys = ent:GetPhysicsObject()
-    if IsValid(phys) then phys:EnableMotion(false) end
+    if IsValid(phys) then
+        phys:EnableMotion(true)
+        phys:EnableGravity(true)
+        phys:EnableCollisions(true)
+        phys:Wake()
+
+        -- Make big furniture feel heavier than wooden crates.
+        if ent.Model == "models/props_c17/FurnitureDresser001a.mdl" then
+            phys:SetMass(math.max(phys:GetMass(), 75))
+        else
+            phys:SetMass(math.max(phys:GetMass(), 35))
+        end
+    end
 
     crates[point.id] = ent
     return ent
