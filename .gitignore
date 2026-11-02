@@ -1,0 +1,10 @@
+# Hammer/GMod generated files
+*.bsp
+*.prt
+*.lin
+*.log
+*.vmx
+*.bak
+
+# Temporary map upload payload
+map/*.vmf.gz.b64
