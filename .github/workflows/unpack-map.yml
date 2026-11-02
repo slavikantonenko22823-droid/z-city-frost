@@ -3,7 +3,7 @@ name: Unpack Hammer map
 on:
   push:
     paths:
-      - 'map/_upload/part03'
+      - 'map/_upload/part05'
   workflow_dispatch:
 
 permissions:
@@ -17,9 +17,9 @@ jobs:
       - name: Rebuild map source
         shell: bash
         run: |
-          cat map/_upload/part* > /tmp/gm_zcity_frost.vmf.gz.b64
-          base64 -d /tmp/gm_zcity_frost.vmf.gz.b64 > /tmp/gm_zcity_frost.vmf.gz
-          gzip -dc /tmp/gm_zcity_frost.vmf.gz > map/gm_zcity_frost.vmf
+          cat map/_upload/part* > /tmp/gm_zcity_frost.vmf.xz.b64
+          base64 -d /tmp/gm_zcity_frost.vmf.xz.b64 > /tmp/gm_zcity_frost.vmf.xz
+          xz -dc /tmp/gm_zcity_frost.vmf.xz > map/gm_zcity_frost.vmf
           rm -rf map/_upload
       - name: Commit map source
         shell: bash
