@@ -10,6 +10,8 @@ local SUPPORTED_MAPS = {
     ["gm_zcity_frost_v3"] = true,
     ["gm_zcity_frost_v4"] = true,
     ["gm_zcity_frost_v4_1"] = true,
+    ["gm_zcity_frost_v4_2"] = true,
+    ["gm_zcity_frost_v4_2_REVORK"] = true,
 }
 
 if not SUPPORTED_MAPS[game.GetMap()] then return end
