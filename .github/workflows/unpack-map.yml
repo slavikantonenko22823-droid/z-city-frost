@@ -3,7 +3,7 @@ name: Unpack Hammer map
 on:
   push:
     paths:
-      - 'map/gm_zcity_frost.vmf.gz.b64'
+      - 'map/_upload/**'
   workflow_dispatch:
 
 permissions:
@@ -14,18 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Decode map
+      - name: Rebuild map source
         shell: bash
         run: |
-          base64 -d map/gm_zcity_frost.vmf.gz.b64 > /tmp/gm_zcity_frost.vmf.gz
+          cat map/_upload/part* > /tmp/gm_zcity_frost.vmf.gz.b64
+          base64 -d /tmp/gm_zcity_frost.vmf.gz.b64 > /tmp/gm_zcity_frost.vmf.gz
           gzip -dc /tmp/gm_zcity_frost.vmf.gz > map/gm_zcity_frost.vmf
-          rm -f map/gm_zcity_frost.vmf.gz.b64
+          rm -rf map/_upload
       - name: Commit map source
         shell: bash
         run: |
           git config user.name "zcity-frost-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add map/gm_zcity_frost.vmf map/gm_zcity_frost.vmf.gz.b64
+          git add map/gm_zcity_frost.vmf map/_upload
           if git diff --cached --quiet; then
             exit 0
           fi
