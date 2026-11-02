@@ -1,11 +1,12 @@
 # Z-City Frost
 
-Рабочий проект зимней survival-карты и связанного loot-addon для Garry's Mod / Z-City.
+Рабочий проект зимней survival-карты и связанных addon'ов для Garry's Mod / Z-City.
 
 ## Структура
 
 - `map/gm_zcity_frost.vmf` — исходник карты для Hammer.
 - `addons/zcity_frost_loot/` — серверный addon с loot-контейнерами.
+- `addons/zcity_frost_cold/` — система холода, обогрева и респавна у последнего огня.
 - `.github/workflows/unpack-map.yml` — служебный workflow для обновления большой VMF-карты.
 
 ## Версии
@@ -34,13 +35,48 @@
 
 `garrysmod/addons/`
 
-Контейнеры используют нативный `zbox_lootbox` Z-City и модели:
-
-- `models/props_junk/wood_crate002a.mdl`
-- `models/props_junk/wood_crate001a_damaged.mdl`
-- `models/props_junk/wood_crate001a.mdl`
-- `models/props_c17/FurnitureDresser001a.mdl`
-
 Пересоздать лут:
 
 `zc_frost_loot_respawn`
+
+## Cold system
+
+Папку:
+
+`addons/zcity_frost_cold`
+
+нужно ставить в:
+
+`garrysmod/addons/`
+
+Логика по умолчанию:
+
+- шкала холода 0–100;
+- на улице 0→100 примерно за 8 минут без тёплой одежды;
+- в помещении — примерно за 25 минут;
+- одежда Z-City с `WarmSave` замедляет замерзание;
+- активный огонь уменьшает шкалу;
+- после 100% даётся 120 секунд, в течение которых игрок ещё может двигаться и искать тепло;
+- если согреться и опустить шкалу ниже 95%, критическая стадия отменяется;
+- после 120 секунд начинается короткая фаза засыпания;
+- смерть от холода возвращает игрока к последнему зарегистрированному источнику огня.
+
+Основные настройки:
+
+`zc_frost_cold_outdoor_time 480`
+
+`zc_frost_cold_indoor_time 1500`
+
+`zc_frost_cold_grace_time 120`
+
+`zc_frost_cold_sleep_time 12`
+
+`zc_frost_cold_heat_recovery 1.75`
+
+`zc_frost_cold_heat_radius 300`
+
+`zc_frost_cold_checkpoint_time 12`
+
+Быстрый тест:
+
+`zc_frost_cold_set 100`
