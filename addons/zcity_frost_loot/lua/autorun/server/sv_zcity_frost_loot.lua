@@ -252,6 +252,23 @@ local function spawnPoint(point)
     return ent
 end
 
+hook.Add("EntityTakeDamage", "ZCityFrostLoot_PhysicsDamage", function(ent, dmg)
+    if not IsValid(ent) or not ent.ZCityFrostLoot then return end
+
+    local phys = ent:GetPhysicsObject()
+    if not IsValid(phys) then return end
+
+    local force = dmg:GetDamageForce()
+    if force:IsZero() and IsValid(dmg:GetAttacker()) then
+        force = dmg:GetAttacker():GetAimVector() * math.max(dmg:GetDamage(), 10) * 450
+    end
+
+    if not force:IsZero() then
+        phys:Wake()
+        phys:ApplyForceOffset(force, dmg:GetDamagePosition())
+    end
+end)
+
 local function spawnAll()
     removeOurCrates()
     armedHut = math.random(1, 5)
