@@ -1,0 +1,33 @@
+name: Unpack Hammer map
+
+on:
+  push:
+    paths:
+      - 'map/gm_zcity_frost.vmf.gz.b64'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode map
+        shell: bash
+        run: |
+          base64 -d map/gm_zcity_frost.vmf.gz.b64 > /tmp/gm_zcity_frost.vmf.gz
+          gzip -dc /tmp/gm_zcity_frost.vmf.gz > map/gm_zcity_frost.vmf
+          rm -f map/gm_zcity_frost.vmf.gz.b64
+      - name: Commit map source
+        shell: bash
+        run: |
+          git config user.name "zcity-frost-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add map/gm_zcity_frost.vmf map/gm_zcity_frost.vmf.gz.b64
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Update Hammer map source"
+          git push
